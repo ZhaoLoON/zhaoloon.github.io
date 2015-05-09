@@ -104,44 +104,21 @@
 <h2 id="概述">概述</h2><p>抽象类<strong>InputStream</strong>、<strong>OutputStream</strong>、<strong>Reader</strong>、<strong>Writer</strong>有很多子类，其中<strong>InputStream</strong>和<strong>OutputStream</strong>是用来处理字节流，<strong>Reader</strong>和<strong>Writer</strong>用来处理字符流。  </p>
 <blockquote>
 <ul>
-<li>InputStreamReader将字节流转换为字符流，读入的字节流可以通过设定的<strong>charset</strong>转换为字符流。  </li>
-</ul>
-</blockquote>
-<pre><code>Reader reader = new InputStreamReader<span class="list">(<span class="keyword">inputStream</span>)</span><span class="comment">;</span>
-</code></pre><blockquote>
-<ul>
-<li>OutputStreamWriter将写入的字符流转换为字节流，写入的字符流可以通过设定的<strong>charset</strong>转换为字节流。  </li>
-</ul>
-</blockquote>
-<pre><code>Writer writer = new OutputStreamWriter<span class="list">(<span class="keyword">outputStream</span>)</span><span class="comment">;</span>
-</code></pre><blockquote>
-<ul>
-<li>读取文件可以根据是二进制文件还是文本文件选择不同的类，二进制文件使用FileInputStream，文本文件使用FileReader。同样，写入文件分别对应FileOutputStream和FileWriter。  </li>
+<li><p>InputStreamReader将字节流转换为字符流，读入的字节流可以通过设定的<strong>charset</strong>转换为字符流。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Reader reader = <span class="keyword">new</span> InputStreamReader(inputStream);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>OutputStreamWriter将写入的字符流转换为字节流，写入的字符流可以通过设定的<strong>charset</strong>转换为字节流。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Writer writer = <span class="keyword">new</span> OutputStreamWriter(outputStream);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>读取文件可以根据是二进制文件还是文本文件选择不同的类，二进制文件使用FileInputStream，文本文件使用FileReader。同样，写入文件分别对应FileOutputStream和FileWriter。  </p>
+</li>
 <li>如果需要跨越式的读写文件可以使用RandomAccessFile  </li>
-<li>ByteArrayInputStream和CharArrayReader可以讲字节或者字符数组转换为输入流。  </li>
-</ul>
-</blockquote>
-<pre><code><span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];
-
-<span class="comment">//写入数据</span>
-
-InputStream inputStream = <span class="keyword">new</span> ByteArrayInputStream(bytes);
-
-<span class="keyword">int</span> data = inputStream.<span class="keyword">read</span>();
-<span class="keyword">while</span>(-<span class="number">1</span> != data)
-{
-    data = inputStream.<span class="keyword">read</span>();
-}
-</code></pre><blockquote>
-<ul>
-<li>字节和字符数组可以通过ByteArrayOutputStream和CharArrayWriter写入，写入完成后，可以通过toByteArray()或者toCharArray()以数组的形式返回。  </li>
-</ul>
-</blockquote>
-<pre><code><span class="type">ByteArrayOutputStream</span> output = <span class="keyword">new</span> <span class="type">ByteArrayOutputStream</span><span class="literal">()</span>;
-output.write(<span class="string">"This text is converted to bytes"</span>.getBytes(<span class="string">"UTF-8"</span>));
-byte<span class="literal">[]</span> <span class="built_in">bytes</span> = output.toByteArray<span class="literal">()</span>;
-</code></pre><blockquote>
-<ul>
+<li><p>ByteArrayInputStream和CharArrayReader可以讲字节或者字符数组转换为输入流。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">//写入数据</span></span><br><span class="line">    </span><br><span class="line">InputStream inputStream = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line">    </span><br><span class="line"><span class="keyword">int</span> data = inputStream.read();</span><br><span class="line"><span class="keyword">while</span>(-<span class="number">1</span> != data)</span><br><span class="line">&#123;</span><br><span class="line">    data = inputStream.read();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>字节和字符数组可以通过ByteArrayOutputStream和CharArrayWriter写入，写入完成后，可以通过toByteArray()或者toCharArray()以数组的形式返回。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ByteArrayOutputStream output = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">output.write(<span class="string">"This text is converted to bytes"</span>.getBytes(<span class="string">"UTF-8"</span>));</span><br><span class="line"><span class="keyword">byte</span>[] bytes = output.toByteArray();</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>InputStream使用read方法读取数据，read返回一个整数，整数为读取到的一个字节的内容(0~255)，当流读到末尾时，返回-1.  </p>
 </li>
 <li><p>Reader的read方法一次返回一个字符，返回值的范围在0~65535之间，文件末尾时返回-1，这并不意味着read一次读取两个字节，read会根据文本的编码一次读取一个或多个字节。  </p>
@@ -151,41 +128,9 @@ byte<span class="literal">[]</span> <span class="built_in">bytes</span> = output
 </blockquote>
 <p>下图转自<a href="http://ifeve.com/" target="_blank" rel="external">并发编程网</a><br><img src="http://ifeve.com/wp-content/uploads/2014/10/QQ%E6%88%AA%E5%9B%BE20141020174145.png" alt=""></p>
 <hr>
-<h2 id="InputStream">InputStream</h2><p>InputStream是Java IO中所有字节输入流的基类，用于读取字节流，一次读取一个字节。  </p>
-<pre><code>InputStream <span class="keyword">input</span> = null;
-try
-{
-    <span class="keyword">input</span> = new FileInputStream(<span class="string">"d:\\text.txt"</span>);
-    int data = <span class="keyword">input</span>.<span class="keyword">read</span>();
-    <span class="keyword">while</span>(data != -1)
-    {
-        <span class="comment">//do something</span>
-        data = <span class="keyword">input</span>.<span class="keyword">read</span>();
-    }
-}
-catch (Exception <span class="keyword">e</span>)
-{
-    <span class="comment">//handle exception</span>
-}
-finally
-{
-    <span class="keyword">if</span> (<span class="keyword">input</span> != null)
-    {
-        <span class="keyword">input</span>.<span class="keyword">close</span>();
-    }
-}
-</code></pre><p>Java7可以使用try-with-resource结构确保InputStream在使用完后关闭。  </p>
-<pre><code>//当线程退出try语句块的时候<span class="type">InputStream</span>会被关闭
-<span class="title">try</span>(<span class="type">InputStream</span> input = new <span class="type">FileInputStream</span>(<span class="string">"d:\\text.txt"</span>))
-{
-    int <span class="typedef"><span class="keyword">data</span> = input.read<span class="container">()</span>;</span>
-    while(<span class="typedef"><span class="keyword">data</span> != -1)</span>
-    {
-        //<span class="keyword">do</span> something
-        <span class="typedef"><span class="keyword">data</span> = input.read<span class="container">()</span>;</span>
-    }
-}
-</code></pre><p>InputStream还有两个读取数据并将数据存储到缓冲数组的read方法  </p>
+<h2 id="InputStream">InputStream</h2><p>InputStream是Java IO中所有字节输入流的基类，用于读取字节流，一次读取一个字节。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">InputStream input = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">    input = <span class="keyword">new</span> FileInputStream(<span class="string">"d:\\text.txt"</span>);</span><br><span class="line">    <span class="keyword">int</span> data = input.read();</span><br><span class="line">    <span class="keyword">while</span>(data != -<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">        data = input.read();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (Exception e)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//handle exception</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">finally</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (input != <span class="keyword">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        input.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Java7可以使用try-with-resource结构确保InputStream在使用完后关闭。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//当线程退出try语句块的时候InputStream会被关闭</span></span><br><span class="line"><span class="keyword">try</span>(InputStream input = <span class="keyword">new</span> FileInputStream(<span class="string">"d:\\text.txt"</span>))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> data = input.read();</span><br><span class="line">    <span class="keyword">while</span>(data != -<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">        data = input.read();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>InputStream还有两个读取数据并将数据存储到缓冲数组的read方法  </p>
 <ul>
 <li>read(byte[] b)</li>
 <li>read(byte[] b, int offset, int length)</li>
@@ -222,38 +167,25 @@ finally
 </ol>
 <h2 id="FileInputStream_和_FileOutputStream">FileInputStream 和 FileOutputStream</h2><p>以字节流的形式读取写入文件</p>
 <p>FileOutputStream(File file, boolean append)构造方法中布尔值append表示是否拼接文件，true表示从文件末尾开始写入，false表示覆盖该文件，从文件头开始写入。</p>
-<pre><code><span class="comment">//1</span>
-InputStream input = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\input-text.txt"</span>);
-
-<span class="comment">//2</span>
-<span class="keyword">File</span> <span class="keyword">file</span> = <span class="keyword">new</span> <span class="keyword">File</span>(<span class="string">"c:\\data\\input-text.txt"</span>);
-InputStream input = <span class="keyword">new</span> FileInputStream(<span class="keyword">file</span>);
-
-<span class="comment">//3</span>
-OutputStream output = <span class="keyword">new</span> FileOutputStream(<span class="string">"c:\\data\\output-text.txt"</span>, <span class="keyword">true</span>); <span class="comment">//appends to file</span>
-
-<span class="comment">//4</span>
-OutputStream output = <span class="keyword">new</span> FileOutputStream(<span class="string">"c:\\data\\output-text.txt"</span>, <span class="keyword">false</span>); <span class="comment">//overwrites file  </span>
-</code></pre><h2 id="RandomAccessFile">RandomAccessFile</h2><p>RandomAccessFIle可以来回读写文件，替换文件中的某些部分。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1</span></span><br><span class="line">InputStream input = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\input-text.txt"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//2</span></span><br><span class="line">File file = <span class="keyword">new</span> File(<span class="string">"c:\\data\\input-text.txt"</span>);</span><br><span class="line">InputStream input = <span class="keyword">new</span> FileInputStream(file);</span><br><span class="line">    </span><br><span class="line"><span class="comment">//3</span></span><br><span class="line">OutputStream output = <span class="keyword">new</span> FileOutputStream(<span class="string">"c:\\data\\output-text.txt"</span>, <span class="keyword">true</span>); <span class="comment">//appends to file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//4</span></span><br><span class="line">OutputStream output = <span class="keyword">new</span> FileOutputStream(<span class="string">"c:\\data\\output-text.txt"</span>, <span class="keyword">false</span>); <span class="comment">//overwrites file</span></span><br></pre></td></tr></table></figure>
+<h2 id="RandomAccessFile">RandomAccessFile</h2><p>RandomAccessFIle可以来回读写文件，替换文件中的某些部分。  </p>
 <ul>
-<li><p>创建RandomAccessFile<br>  RandomAccessFile file = new RandomAccessFile(“c:\text.txt”, “rw”);</p>
+<li>创建RandomAccessFile<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RandomAccessFile file = <span class="keyword">new</span> RandomAccessFile(<span class="string">"c:\\text.txt"</span>, <span class="string">"rw"</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 <blockquote>
 <p><strong>“r”</strong>:以只读模式打开文件，调用write方法是会抛出IOException<br><strong>“rw”</strong>:读写模式打开文件，若文件不存在，则创建一个新的文件<br><strong>“rws”</strong>:打开以便读取和写入，对于 “rw”，还要求对文件的内容或元数据的每个更新都同步写入到底层存储设备。<br><strong>“rwd”</strong>:打开以便读取和写入，对于 “rw”，还要求对文件内容的每个更新都同步写入到底层存储设备。<br><strong>rws</strong>会每次同步写入数据和元数据，如文件修改时间等，<strong>rwd</strong>不会，所以<strong>rwd</strong>可以减少I/O数量，效率比<strong>rws</strong>更高，当然<strong>rw</strong>效率要高于<strong>rwd</strong>  </p>
 </blockquote>
-</li>
-<li><p>RandomAccessFile读写</p>
-</li>
+<ul>
+<li>RandomAccessFile读写</li>
 </ul>
-<p>通过seek()方法可以移动文件指针到任何位置。可以通过getFilePointer()获取当前文件指针的位置。  </p>
-<pre><code><span class="keyword">try</span>(RandomAccessFile <span class="keyword">file</span> = <span class="keyword">new</span> RandomAccessFile(<span class="string">"c:\\text.txt"</span>, <span class="string">"rw"</span>))
-{
-    <span class="keyword">file</span>.seek(<span class="number">200</span>);
-    <span class="keyword">int</span> data = <span class="keyword">file</span>.<span class="keyword">read</span>();
-    <span class="keyword">long</span> pointer = <span class="keyword">file</span>.getFilePointer();
-}  
-</code></pre><p>skipBytes(n)尝试跳过n个字节<br>length()返回文件的长度</p>
+<p>通过seek()方法可以移动文件指针到任何位置。可以通过getFilePointer()获取当前文件指针的位置。<br>skipBytes(n)尝试跳过n个字节<br>length()返回文件的长度 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>(RandomAccessFile file = <span class="keyword">new</span> RandomAccessFile(<span class="string">"c:\\text.txt"</span>, <span class="string">"rw"</span>))  </span><br><span class="line">&#123;  </span><br><span class="line">    file.seek(<span class="number">200</span>);  </span><br><span class="line">    <span class="keyword">int</span> data = file.read();  </span><br><span class="line">    <span class="keyword">long</span> pointer = file.getFilePointer();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="File">File</h2><ul>
-<li>实例化File对象<br>  File file = new File(“c:\text.txt”);  </li>
+<li>实例化File对象  </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File file = <span class="keyword">new</span> File(<span class="string">"c:\\text.txt"</span>);</span><br></pre></td></tr></table></figure>
+<ul>
 <li>file.exists()检测文件是否存在</li>
 <li>file.length()获取文件长度</li>
 <li>file.renameTo(“c:\text1.txt”)，移动或者重命名文件</li>
@@ -272,29 +204,16 @@ OutputStream output = <span class="keyword">new</span> FileOutputStream(<span cl
 <li>mkdirs() 创建目录，包含不存在的父目录</li>
 <li>setReadOnly(), setReadable(boolean), setWritable(boolean), setExcutable(boolean)设置权限 </li>
 </ul>
-<h2 id="PushbackInputStream">PushbackInputStream</h2><p>PushbackInputStream用友一个缓冲区，允许在缓冲区未满的情况下，将已经读取的数据推回流的前端。  </p>
-<pre><code>PushbackInputStream <span class="built_in">input</span> = <span class="keyword">new</span> PushbackInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"c:\text.txt"</span>));
-<span class="keyword">int</span> data = <span class="built_in">input</span>.<span class="keyword">read</span>();
-<span class="built_in">input</span>.unread(data);  
-</code></pre><p>可以通过构造器设置缓冲区的大小  </p>
-<pre><code>PushbackInputStream input = new PushbackInputStream<span class="list">(<span class="keyword">new</span> FileInputStream<span class="list">(<span class="string">"c:\text.txt"</span>)</span>, <span class="number">8</span>)</span><span class="comment">;</span>
-</code></pre><h2 id="SequenceInputStream">SequenceInputStream</h2><p>SequenceInputStream将两个或多个InputStream合并为一个，先读取第一个InputStream，结束后从第二个InputStream起始处开始读取。  </p>
-<pre><code>InputStream input1 = new FileInputStream<span class="list">(<span class="string">"c:\\data\\file1.txt"</span>)</span><span class="comment">;</span>
-InputStream input2 = new FileInputStream<span class="list">(<span class="string">"c:\\data\\file2.txt"</span>)</span><span class="comment">;</span>
-
-InputStream combined = new SequenceInputStream<span class="list">(<span class="keyword">input1</span>, input2)</span><span class="comment">;  </span>
-</code></pre><h2 id="Serializable,_ObjectInputStream,_ObjectOutputStream">Serializable, ObjectInputStream, ObjectOutputStream</h2><ul>
+<h2 id="PushbackInputStream">PushbackInputStream</h2><p>PushbackInputStream用友一个缓冲区，允许在缓冲区未满的情况下，将已经读取的数据推回流的前端。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PushbackInputStream input = <span class="keyword">new</span> PushbackInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"c:\text.txt"</span>));</span><br><span class="line"><span class="keyword">int</span> data = input.read();</span><br><span class="line">input.unread(data);</span><br></pre></td></tr></table></figure></p>
+<p>可以通过构造器设置缓冲区的大小<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PushbackInputStream input = <span class="keyword">new</span> PushbackInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"c:\text.txt"</span>), <span class="number">8</span>);</span><br></pre></td></tr></table></figure></p>
+<h2 id="SequenceInputStream">SequenceInputStream</h2><p>SequenceInputStream将两个或多个InputStream合并为一个，先读取第一个InputStream，结束后从第二个InputStream起始处开始读取。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">InputStream input1 = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\file1.txt"</span>);</span><br><span class="line">InputStream input2 = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\file2.txt"</span>);</span><br><span class="line"></span><br><span class="line">InputStream combined = <span class="keyword">new</span> SequenceInputStream(input1, input2);</span><br></pre></td></tr></table></figure></p>
+<h2 id="Serializable,_ObjectInputStream,_ObjectOutputStream">Serializable, ObjectInputStream, ObjectOutputStream</h2><ul>
 <li>Serializable接口是一个标记接口，接口并未定义任何方法，用户来标记对象是否可以被序列化</li>
 <li><p>ObjectOutputStream可以将实现了Serializable接口的Java对象序列化到文件中 </p>
-<p>  ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(“object.data”));</p>
-<p>  MyClass object = new MyClass();</p>
-<p>  output.writeObject(object);<br>  //etc.</p>
-<p>  output.close();</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ObjectOutputStream output = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"object.data"</span>));</span><br><span class="line"></span><br><span class="line">MyClass object = <span class="keyword">new</span> MyClass();</span><br><span class="line"></span><br><span class="line">output.writeObject(object);</span><br><span class="line"><span class="comment">//etc.</span></span><br><span class="line"></span><br><span class="line">output.close();</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>ObjectInputStream可以从文件中反序列化出Java对象。</p>
-<p>  ObjectInputStream input = new ObjectInputStream(new FileInputStream(“object.data”));</p>
-<p>  MyClass object = (MyClass) input.readObject();<br>  //etc.</p>
-<p>  input.close();    </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ObjectInputStream input = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"object.data"</span>));</span><br><span class="line"></span><br><span class="line">MyClass object = (MyClass) input.readObject();</span><br><span class="line"><span class="comment">//etc.</span></span><br><span class="line"></span><br><span class="line">input.close();</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>另外值得说的是公司的安全编码规范中也有说到对象序列化，对于敏感数据尽量不要序列化到文件中，可以使用transient来修饰敏感数据域，这样在对象序列化的时候就会忽略这个数据域。</p>
 </li>
@@ -308,11 +227,7 @@ InputStream combined = new SequenceInputStream<span class="list">(<span class="k
 <ul>
 <li>FileReader总是以系统的默认编码方式解码文件，并且无法修改FileReader的解码方式，如果需要使用不同的编码进行解码文件，可以使用InputStreamReader代替FileReader  </li>
 <li>LineNumberReader是BufferedReader的子类，支持读取整行和获取当前读取指针所在的行，值得注意的是LineNumberReader的setLineNumber()方法不会更改流中的当前位置，仅仅更改getLineNumber()方法的返回值。  </li>
-<li><p>StringReader可以将字符串String转换为Reader，以流的形式读取。  </p>
-<p>  Reader reader = new StringReader(“this is a test.”);<br>  int data = reader.read();<br>  while(data != -1)<br>  {  </p>
-<pre><code><span class="type">System</span>.out.println((char)<span class="typedef"><span class="keyword">data</span>);  </span>
-<span class="typedef"><span class="keyword">data</span> = reader.read<span class="container">()</span>;  </span>
-</code></pre><p>  }  </p>
+<li>StringReader可以将字符串String转换为Reader，以流的形式读取。  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Reader reader = <span class="keyword">new</span> StringReader(<span class="string">"this is a test."</span>);  </span><br><span class="line"><span class="keyword">int</span> data = reader.read();  </span><br><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>)  </span><br><span class="line">&#123;  </span><br><span class="line">	System.out.println((<span class="keyword">char</span>)data);  </span><br><span class="line">	data = reader.read();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 
