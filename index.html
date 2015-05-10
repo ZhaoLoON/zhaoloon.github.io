@@ -81,6 +81,202 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/05/10/java-nio/" title="Java NIO" itemprop="url">Java NIO</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ZhaoLoON" target="_blank" itemprop="author">ZhaoLoON</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-10T11:27:06.000Z" itemprop="datePublished"> 发表于 2015-05-10</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>继续复习一下Java基础知识，这个文章算是阅读笔记吧。<br>参考：  </p>
+<ol>
+<li><a href="&quot;http://ifeve.com/java-nio-all/&quot;">Java NIO系列教程</a>  </li>
+<li><a href="&quot;http://tutorials.jenkov.com/java-nio/index.html&quot;">Java NIO Tutorial</a>  </li>
+<li><a href="&quot;http://www.ibm.com/developerworks/cn/education/java/j-nio/j-nio.html&quot;">NIO 入门</a>  </li>
+<li><a href="&quot;https://www.ibm.com/developerworks/cn/java/j-nio2-1/&quot;">NIO.2入门</a>  </li>
+</ol>
+<h2 id="概述">概述</h2><p>Java1.4引入Java NIO(Non-blocking I/O 或者New I/O)，为Java提供了非阻塞IO，并且在Java 1.7中又引入了JAVA NIO.2，位Java增加了异步通道和新的文件心痛API。 </p>
+<ul>
+<li>Channels and Buffers  </li>
+</ul>
+<blockquote>
+<p>标准的IO是基于字节流和字符流进行操作，二NIO是基于Channel和Buffer进行操作，数据总是从通道读取到缓冲区中，或者从缓冲区写入到通道中。 </p>
+</blockquote>
+<ul>
+<li>Non-blocking IO  </li>
+</ul>
+<blockquote>
+<p>Java NIO让你以非阻塞的方式使用IO，例如：当线程从通道读取数据到缓冲区时，线程还是可以进行其他属性。当数据被写入到缓冲区时，线程可以继续处理它。从缓冲区写入通道也类似。   </p>
+</blockquote>
+<ul>
+<li>Selector  </li>
+</ul>
+<blockquote>
+<p>Java NIO引入了选择器的概念，选择器用于监听多个通道的事件(比如连接打开)。因此单个线程可以监听多个数据通道。需要使用Selector，需要向Selector注册Channel，然后调用它的select()方法。这个方法会一直阻塞到某个注册的通道有事件就绪。一旦这个方法返回，线程就可以处理这些事件。    </p>
+</blockquote>
+<ul>
+<li><p>Java NIO一些主要的Channel</p>
+<ul>
+<li>FileChannel 从文件中读写数据</li>
+<li>DatagramChannel 通过UDP读写网络数据</li>
+<li>SocketChannel 通过TCP读写网络数据</li>
+<li>ServerSocketChannel 可以监听新进来的TCP连接，对每个新进来的连接都会创建一个SocketChannel   </li>
+</ul>
+</li>
+<li><p>Java NIO中关键的Buffer</p>
+<ul>
+<li>ByteBuffer</li>
+<li>CharBuffer</li>
+<li>DoubleBuffer</li>
+<li>FloatBuffer</li>
+<li>IntBuffer</li>
+<li>LongBuffer</li>
+<li>ShortBuffer</li>
+<li>MappedByteBuffer</li>
+</ul>
+</li>
+</ul>
+<h2 id="Channel">Channel</h2><p>Java NIO的Channel类似流，但又有些不同：</p>
+<ul>
+<li>既可以从通道中读取数据，又可以写数据到通道中。但流的读写通常是单向的。  </li>
+<li>通道可以异步读写。  </li>
+<li>通道中的数据总是要先读取一个Buffer，或者总是要从一个Buffer中写入。   </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>(RandomAccessFile file = <span class="keyword">new</span> RandomAccessFile(<span class="string">"data/nio-data.txt"</span>, <span class="string">"rw"</span>))  </span><br><span class="line">&#123;  </span><br><span class="line">	FileChannel inChannel = file.getChannel();  </span><br><span class="line">   	ByteBuffer buf = ByteBuffer.allocate(<span class="number">48</span>);  </span><br><span class="line">           </span><br><span class="line">   	<span class="keyword">int</span> bytesRead = inChannel.read(buf);  </span><br><span class="line">   	<span class="keyword">while</span>(bytesRead != -<span class="number">1</span>)  </span><br><span class="line">   	&#123;  </span><br><span class="line">		System.out.println(<span class="string">"Read "</span> + bytesRead);  </span><br><span class="line">       	buf.flip();  </span><br><span class="line">               </span><br><span class="line">       	<span class="keyword">while</span>(buf.hasRemaining())  </span><br><span class="line">		&#123;</span><br><span class="line">        	System.out.println(buf.getChar());  </span><br><span class="line">        &#125;  </span><br><span class="line">               </span><br><span class="line">        buf.clear();  </span><br><span class="line">        bytesRead = inChannel.read(buf);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Buffer">Buffer</h2><p>Buffer本质上是一块可以写入数据，然后可以从中读取数据的内存。这块内存被包装成NIO Buffer对象，并提供了一组方法，用于方便的访问块内存。  </p>
+<h3 id="Buffer的基本用法">Buffer的基本用法</h3><p>Buffer读写数据一下四个步骤：  </p>
+<ol>
+<li>写入数据到Buffer  </li>
+<li>调用flip()方法  </li>
+<li>从Buffer中读取数据  </li>
+<li>调用clear()方法或者compact()方法  </li>
+</ol>
+<p>向Buffer中写入数据时，buffer会记录下写了多少数据。一旦要读取数据，需要通过flip()方法将Buffer从写模式切换到读模式。在读模式下，可以读取之前写入的数据。<br>一旦读完所有数据，就需要清空缓存区，让它可以被再次写入。有两种方法清空缓冲区：</p>
+<ul>
+<li>clear()方法会清空整个缓冲区。  </li>
+<li>compact()方法只会清空以读过的数据，任何未读的数据都被移到缓冲区的起始处，新写入的数据将放到缓冲区未读数据的后面。  </li>
+</ul>
+<h3 id="Buffer的capacity,_position和limit">Buffer的capacity, position和limit</h3><p>理解Buffer的工作原理，需要熟悉它的三个属性：<br>下图转自<a href="http://ifeve.com/" target="_blank" rel="external">并发编程网</a><br><img src="&quot;http://ifeve.com/wp-content/uploads/2013/06/buffers-modes.png&quot;" alt="">  </p>
+<ul>
+<li><p>capacity  </p>
+<blockquote>
+<p>作为一个内存块，Buffer有一个固定的大小值，就是capacity。只能往里写capacity个byte、long、char等类型。一旦buffer满了，需要将其清空才能继续写数据。  </p>
+</blockquote>
+</li>
+<li><p>position  </p>
+<blockquote>
+<ul>
+<li>写模式：初始值为0，当没写入一个数据时，position向前移动到下一个可以插入的数据的Buffer单元。position最大值为capacity-1。    </li>
+<li>读模式： 当Buffer从写模式切换到读模式，position会被重置为0，当从Buffer的position处读取数据时，position向前移动到下一个可以读的位置。</li>
+</ul>
+</blockquote>
+</li>
+<li><p>limit  </p>
+<blockquote>
+<ul>
+<li>写模式：limit表示最多能往buffer里写多少数据，此时limit=capacity  </li>
+<li>读模式：切换到读模式时，limit表示最多可以读到多少数据。此时limit会被设置成写模式下的position值。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h3 id="Buffer的类型">Buffer的类型</h3><p>Java NIO有以下Buffer类型  </p>
+<ul>
+<li>ByteBuffer  </li>
+<li>MappedByteBuffer  </li>
+<li>CharBuffer  </li>
+<li>DoubleBuffer  </li>
+<li>FloatBuffer  </li>
+<li>IntBuffer  </li>
+<li>LongBuffer  </li>
+<li>ShortBuffer  </li>
+</ul>
+<h3 id="Buffer的分配">Buffer的分配</h3><p>想要获得一个Buffer对象首先要进行分配。每个buffer有一个allocate方法。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer byteBuf = ByteBuffer.allocate(<span class="number">48</span>);  </span><br><span class="line">CharBuffer charBuf = CharBuffer.allocate(<span class="number">1024</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="向Buffer中写入数据">向Buffer中写入数据</h3><p>两种方式向Buffer中写入数据：  </p>
+<ul>
+<li>从Channel写到Buffer</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> bytesRead = inChannel.read(buf);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过Buffer的put()方法写到Buffer里。  </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">buf.put(<span class="number">127</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="flip()方法">flip()方法</h3><p>flip方法将Buffer从写模式切换到读模式。调用flip方法会将position设回0，并将limit设置成之前position的值。<br>换句话说，position现在用于标记读的位置，limit表示之前写进了多少个byte、char等。  </p>
+<h3 id="从Buffer中读取数据">从Buffer中读取数据</h3><p>两种方法从Buffer中读取数据：  </p>
+<ul>
+<li>从Buffer读取数据到Channel  </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> bytesWriten = inChannel.write(buf);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用get()方法从Buffer中读取数据  </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span> aByte = buf.get();</span><br></pre></td></tr></table></figure>
+<h3 id="rewind()方法">rewind()方法</h3><p>rewind()方法将position设回0，可以重读Buffer中的数据。  </p>
+<h3 id="clear()和compact()">clear()和compact()</h3><p>一旦读完Buffer中的数据，需要让Buffer准备好再次被写入。<br>如果调用clear方法，position将被设回0，limit被设置成capacity的值。换句话说被清空了。Buffer中的数据并未清楚，只是这些标记告诉我们可以从哪里开始往Buffer里写数据。<br>如果Buffer中仍有未读的数据，且后续还需要这些数据，但是此时想要先写数据，那么使用compact方法。<br>compact方法将所有未读的数据拷贝到Buffer起始处。然后将position设到最后一个未读元素正后面。limit设置为capacity。  </p>
+<h3 id="mark()与reset()方法">mark()与reset()方法</h3><p>通过调用Buffer的mark方法，可以标记Buffer中的一个特定position。之后可以通过调用Buffer.reset()方法恢复到这个position。</p>
+<h3 id="equals与compareTo方法">equals与compareTo方法</h3><h4 id="equals()">equals()</h4><p>满足一下条件，两个Buffer相等：  </p>
+<ol>
+<li>有相同的类型(byte、char、int等)  </li>
+<li>Buffer中剩余的个数相等  </li>
+<li>Buffer中所有剩余的byte、char等都相同</li>
+</ol>
+<h4 id="compareTo()">compareTo()</h4><p>如果满足下列条件，则认为一个Buffer“小于”另一个Buffer：  </p>
+<ol>
+<li>第一个不相等的元素小于另一个Buffer中对应的元素 。  </li>
+<li>所有元素都相等，但第一个Buffer比另一个先耗尽(第一个Buffer的元素个数比另一个少)。  </li>
+</ol>
+<p>未完。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/NIO/">NIO</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/10/java-nio/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/10/java-nio/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/05/04/java-io/" title="Java IO" itemprop="url">Java IO</a>
   </h1>
   <p class="article-author">By
@@ -397,11 +593,15 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/Java/" title="Java">Java<sup>1</sup></a></li>
+				<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/IO/" title="IO">IO<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/NIO/" title="NIO">NIO<sup>1</sup></a></li>
 			
 		
 			
